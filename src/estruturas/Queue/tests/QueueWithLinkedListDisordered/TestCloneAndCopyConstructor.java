@@ -1,6 +1,7 @@
-package Queue.tests.QueueWithLinkedListDisordered;
+package estruturas.Queue.tests.QueueWithLinkedListDisordered;
 
-import Queue.QueueWithLinkedListDisordered;
+
+import estruturas.Queue.QueueWithLinkedListDisordered;
 
 public class TestCloneAndCopyConstructor {
     public static void main(String[] args) {

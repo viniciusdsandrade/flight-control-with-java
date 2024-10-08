@@ -1,7 +1,6 @@
-package Queue.tests.QueueWithLinkedListDisordered;
+package estruturas.Queue.tests.QueueWithLinkedListDisordered;
 
-import Queue.QueueWithLinkedListDisordered;
-
+import estruturas.Queue.QueueWithLinkedListDisordered;
 public class TestEqualsAndHashCode {
     public static void main(String[] args) {
         QueueWithLinkedListDisordered<String> queue_WithLinkedListDisordered_str = new QueueWithLinkedListDisordered<String>(5);

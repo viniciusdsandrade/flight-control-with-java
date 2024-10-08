@@ -2,9 +2,14 @@ package estruturas.LinkedList.Tests.Disordered.LinkedListDisordered;
 
 import estruturas.LinkedList.Disordered.LinkedListDisordered;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Comparator.comparing;
+
 public class TestLinkedListDisordered {
 
-    // Método para verificar se a lista é simplesmente encadeada
+    // Metodo para verificar se a lista é simplesmente encadeada
     public static <X> boolean verificaSimplesmenteEncadeada(LinkedListDisordered<X> lista) {
         // Verifica se a lista está vazia ou contém apenas um elemento
         if (lista.primeiro == null || lista.primeiro.proximo == null) return true;
@@ -215,7 +220,7 @@ public class TestLinkedListDisordered {
         list.addLast(lista5);
 
         System.out.println("antes de ordenar:  " + list);
-        list.sort(Comparator.comparing(Object::toString)); // Ordena com base na representação de string dos objetos
+        list.sort(comparing(Object::toString)); // Ordena com base na representação de string dos objetos
         System.out.println("depois de ordenar: " + list);
         list.shuffle(); // Embaralha com base na representação de string dos objetos
         System.out.println("depois de embaralhar: " + list);

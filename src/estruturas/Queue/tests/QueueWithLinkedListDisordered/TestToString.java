@@ -1,6 +1,7 @@
-package Queue.tests.QueueWithLinkedListDisordered;
+package estruturas.Queue.tests.QueueWithLinkedListDisordered;
 
-import Queue.QueueWithLinkedListDisordered;
+
+import estruturas.Queue.QueueWithLinkedListDisordered;
 
 public class TestToString {
     public static void main(String[] args) {

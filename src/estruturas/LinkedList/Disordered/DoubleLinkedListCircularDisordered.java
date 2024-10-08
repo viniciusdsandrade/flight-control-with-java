@@ -2,7 +2,7 @@ package estruturas.LinkedList.Disordered;
 
 import java.util.Objects;
 
-import static ShallowOrDeepCopy.ShallowOrDeepCopy.verifyAndCopy;
+import static estruturas.ShallowOrDeepCopy.ShallowOrDeepCopy.verifyAndCopy;
 
 public class DoubleLinkedListCircularDisordered<X> implements Cloneable {
 
@@ -42,6 +42,7 @@ public class DoubleLinkedListCircularDisordered<X> implements Cloneable {
         }
 
         @Override
+        @SuppressWarnings("MethodDoesntCallSuperMethod")
         public Object clone() {
             Node clone = null;
             try {
@@ -351,6 +352,7 @@ public class DoubleLinkedListCircularDisordered<X> implements Cloneable {
     }
 
     @Override
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Object clone() {
         DoubleLinkedListCircularDisordered<X> clone = null;
         try {

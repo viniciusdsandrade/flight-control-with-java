@@ -2,7 +2,7 @@ package estruturas.LinkedList.Ordered;
 
 import java.util.Objects;
 
-import static ShallowOrDeepCopy.ShallowOrDeepCopy.verifyAndCopy;
+import static estruturas.ShallowOrDeepCopy.ShallowOrDeepCopy.verifyAndCopy;
 
 public class LinkedListCircularOrdered<X extends Comparable<X>> implements Cloneable {
 
@@ -32,6 +32,7 @@ public class LinkedListCircularOrdered<X extends Comparable<X>> implements Clone
         }
 
         @Override
+        @SuppressWarnings("MethodDoesntCallSuperMethod")
         public Object clone() {
             Node clone = null;
             try {
@@ -267,6 +268,7 @@ public class LinkedListCircularOrdered<X extends Comparable<X>> implements Clone
     }
 
     @Override
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Object clone() {
         LinkedListCircularOrdered<X> clone = null;
         try {

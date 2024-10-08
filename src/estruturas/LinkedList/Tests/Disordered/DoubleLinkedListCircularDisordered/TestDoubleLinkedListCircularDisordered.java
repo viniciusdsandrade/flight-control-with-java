@@ -4,7 +4,7 @@ import estruturas.LinkedList.Disordered.DoubleLinkedListCircularDisordered;
 
 public class TestDoubleLinkedListCircularDisordered {
 
-    // Método para verificar se a lista é duplamente ligada
+    // Metodo para verificar se a lista é duplamente ligada
     public static <X> boolean verificaDuplamenteLigada(DoubleLinkedListCircularDisordered<X> lista) {
         // Se a lista estiver vazia ou tiver apenas um elemento, ela é considerada duplamente ligada
         if (lista.getPrimeiro() == null || lista.getPrimeiro() == lista.getUltimo()) return true;

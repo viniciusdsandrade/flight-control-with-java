@@ -5,7 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-import static ShallowOrDeepCopy.ShallowOrDeepCopy.verifyAndCopy;
+import static estruturas.ShallowOrDeepCopy.ShallowOrDeepCopy.verifyAndCopy;
+
 
 public class LinkedListDisordered<X> implements Cloneable {
 
@@ -25,9 +26,15 @@ public class LinkedListDisordered<X> implements Cloneable {
         public Node getProximo() {
             return proximo;
         }
+        public void setElemento(X elemento) {
+            this.elemento = elemento;
+        }
+        public void setProximo(Node proximo) {
+            this.proximo = proximo;
+        }
 
         @SuppressWarnings("unchecked")
-        public Node(Node modelo)  {
+        public Node(Node modelo) {
             if (modelo == null) throw new IllegalArgumentException("Nó não pode ser nulo");
 
             this.elemento = (X) verifyAndCopy(modelo.elemento);
@@ -35,6 +42,7 @@ public class LinkedListDisordered<X> implements Cloneable {
         }
 
         @Override
+        @SuppressWarnings("MethodDoesntCallSuperMethod")
         public Object clone() {
             Node clone = null;
             try {
@@ -85,9 +93,11 @@ public class LinkedListDisordered<X> implements Cloneable {
         this.primeiro = null;
         this.tamanho = 0;
     }
+
     public Node getPrimeiro() {
         return primeiro;
     }
+
     public int getTamanho() {
         return this.tamanho;
     }
@@ -257,7 +267,7 @@ public class LinkedListDisordered<X> implements Cloneable {
             indice++; // Incrementa o índice
         }
 
-        return -1; // Se o elemento não for encontrado, retorna -1
+        return -1; // Se o elemento não for encontrado, retorna −1
     }
 
     public int lastIndexOf(X elemento) {
@@ -292,7 +302,7 @@ public class LinkedListDisordered<X> implements Cloneable {
             indice++; // Incrementa o índice
         }
 
-        return -1; // Se o elemento não for encontrado, retorna -1
+        return -1; // Se o elemento não for encontrado, retorna −1
     }
 
     public boolean contains(X elemento) {
@@ -496,6 +506,7 @@ public class LinkedListDisordered<X> implements Cloneable {
     }
 
     @Override
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Object clone() {
         LinkedListDisordered<X> clone = null;
         try {
@@ -526,7 +537,7 @@ public class LinkedListDisordered<X> implements Cloneable {
         }
 
         return thisNode == null &&
-                thatNode == null;
+               thatNode == null;
     }
 
     @Override

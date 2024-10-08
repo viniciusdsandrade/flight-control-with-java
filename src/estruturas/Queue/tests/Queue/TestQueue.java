@@ -1,4 +1,4 @@
-package Queue.tests.Queue;
+package estruturas.Queue.tests.Queue;
 
 public class TestQueue {
 }
