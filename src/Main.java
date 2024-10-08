@@ -2,6 +2,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import static java.lang.System.in;
+import static util.Input.getNonEmptyString;
 
 /// A classe 'Main' serve como ponto de entrada para o sistema de gerenciamento de voos.
 /// Ela apresenta um menu interativo para que o usuário possa realizar operações como
@@ -50,14 +51,13 @@ public class Main {
                 System.out.println("4. Listar Voos a partir de um Aeroporto");
                 System.out.println("5. Listar Trajetos entre Aeroportos");
                 System.out.println("6. Listar Aeroportos");
+                System.out.println("7. Listar Todas as Combinações Possíveis de Trajetos Entre Dois Aeroportos (Test)");
                 System.out.println("0. Sair");
                 System.out.print("Escolha uma opção: ");
 
-                // Captura a opção digitada pelo usuário
-                option = scanner.nextInt();
+                option = scanner.nextInt(); // Captura a opção digitada pelo usuário
 
-                // Se a entrada for válida, sai do loop
-                validInput = true;
+                validInput = true; // Se a entrada for válida, sai do loop
             } catch (InputMismatchException e) {
                 // Tratamento de erro para entradas inválidas (ex: letras ou símbolos)
                 System.err.println("Entrada inválida. Por favor, insira um número.");
@@ -73,7 +73,6 @@ public class Main {
     ///
     /// @param option A opção escolhida pelo usuário, que determina qual operação será executada.
     private static void handleMenuOption(int option) {
-        // Consumir o newline pendente no buffer do scanner
         scanner.nextLine();
 
         // Realiza a operação correspondente à opção selecionada
@@ -84,8 +83,17 @@ public class Main {
             case 4 -> organizer.listFlightsFromAirport(); // Lista voos a partir de um aeroporto
             case 5 -> organizer.listPathsBetweenAirports(); // Lista trajetos entre aeroportos
             case 6 -> organizer.listAirports(); // Lista todos os aeroportos cadastrados
-            case 0 -> System.out.println("Saindo..."); // Encerra o programa
+            case 7 -> handleListAllPossiblePaths(); // Chama o novo metodo de teste
+            case 0 -> System.err.println("Saindo..."); // Encerra o programa
             default -> System.err.println("Opção inválida."); // Trata opções inválidas
         }
+    }
+
+    private static void handleListAllPossiblePaths() {
+        String sourceCode = getNonEmptyString("Digite o código do aeroporto de origem para o teste: ");
+        String destCode = getNonEmptyString("Digite o código do aeroporto de destino para o teste: ");
+
+        // Chama a nova função para listar todas as combinações possíveis de trajetos
+        organizer.listAllPossiblePaths(sourceCode, destCode);
     }
 }

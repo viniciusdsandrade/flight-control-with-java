@@ -70,12 +70,8 @@ public class Airport implements Cloneable {
     public Airport(Airport other) {
         // Verifica se o aeroporto fornecido é nulo, e lança uma exceção se for.
         if (other == null) throw new IllegalArgumentException("Airport não pode ser nulo");
-
-        // Copia o nome do aeroporto usando a função 'verifyAndCopy', que garante uma cópia segura.
-        this.name = (String) verifyAndCopy(other.name);
-
-        // Copia o código do aeroporto da mesma maneira.
-        this.code = (String) verifyAndCopy(other.code);
+        this.name = (String) verifyAndCopy(other.name); // Copia o nome do aeroporto usando a função 'verifyAndCopy', que garante uma cópia segura.
+        this.code = (String) verifyAndCopy(other.code); // Copia o código do aeroporto da mesma maneira.
 
         // Realiza uma cópia profunda da lista de voos.
         this.flights = (LinkedListDisordered<Flight>) verifyAndCopy(other.flights);
@@ -92,9 +88,7 @@ public class Airport implements Cloneable {
         try {
             // Tenta criar uma nova instância de 'Airport' usando o construtor de cópia.
             clone = new Airport(this);
-        } catch (Exception ignored) {
-            // Qualquer exceção é ignorada; o clone permanecerá 'null' se ocorrer.
-        }
+        } catch (Exception ignored) { } //
         return clone;  // Retorna o clone, ou 'null' se não for possível.
     }
 

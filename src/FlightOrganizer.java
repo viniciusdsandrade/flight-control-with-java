@@ -1,5 +1,8 @@
 import estruturas.LinkedList.Disordered.LinkedListDisordered;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static util.Input.getInt;
 import static util.Input.getNonEmptyString;
 
@@ -38,9 +41,8 @@ public class FlightOrganizer {
         LinkedListDisordered<Airport>.Node current = airports.getPrimeiro();  // Começa pelo primeiro nó da lista
         while (current != null) {  // Continua até percorrer todos os aeroportos
             // Verifica se o código do aeroporto atual corresponde ao código buscado (ignora maiúsculas/minúsculas)
-            if (current.getElemento().getCode().equalsIgnoreCase(code)) {
+            if (current.getElemento().getCode().equalsIgnoreCase(code))
                 return current.getElemento();  // Retorna o aeroporto se for encontrado
-            }
             current = current.getProximo();  // Passa para o próximo aeroporto na lista
         }
         return null;  // Retorna null se o aeroporto não for encontrado
@@ -58,8 +60,7 @@ public class FlightOrganizer {
             return;  // Se o código já existir, exibe mensagem de erro e encerra
         }
 
-        // Se o código não existir, cria e adiciona o novo aeroporto à lista
-        Airport newAirport = new Airport(name, code);
+        Airport newAirport = new Airport(name, code); // Se o código não existir, cria e adiciona o novo aeroporto à lista
         airports.addLast(newAirport);  // Adiciona ao final da lista
         System.out.println("Aeroporto adicionado com sucesso.");
     }
@@ -88,22 +89,30 @@ public class FlightOrganizer {
             return;  // Se não encontrado, exibe mensagem de erro e encerra
         }
 
-        // Verifica se já existe um voo com o mesmo número partindo do aeroporto de origem
-        LinkedListDisordered<Flight>.Node current = sourceAirport.getFlights().getPrimeiro();
-        while (current != null) {  // Percorre a lista de voos do aeroporto de origem
-            if (current.getElemento().getFlightNumber() == flightNumber) {
-                System.err.println("Número de voo já existe para este aeroporto.");
-                return;  // Se o voo já existir, exibe erro e encerra
+        // Verifica se já existe um voo com o mesmo número em qualquer aeroporto
+        boolean flightNumberExists = false;
+        LinkedListDisordered<Airport>.Node airportNode = airports.getPrimeiro();  // Começa pelo primeiro aeroporto
+        while (airportNode != null && !flightNumberExists) {  // Percorre todos os aeroportos
+            LinkedListDisordered<Flight>.Node current = airportNode.getElemento().getFlights().getPrimeiro();
+            while (current != null) {  // Percorre todos os voos do aeroporto
+                if (current.getElemento().getFlightNumber() == flightNumber) {
+                    flightNumberExists = true;
+                    break;
+                }
+                current = current.getProximo();  // Passa para o próximo voo
             }
-            current = current.getProximo();  // Passa para o próximo voo
+            airportNode = airportNode.getProximo();  // Passa para o próximo aeroporto
         }
 
-        // Se o voo não existir, cria e adiciona o novo voo à lista
-        Flight newFlight = new Flight(destCode, flightNumber);
+        if (flightNumberExists) {
+            System.err.println("Número de voo já existe.");
+            return;  // Se o número do voo já existir, exibe erro e encerra
+        }
+
+        Flight newFlight = new Flight(destCode, flightNumber); // Se o voo não existir, cria e adiciona o novo voo à lista
         sourceAirport.getFlights().addLast(newFlight);  // Adiciona ao final da lista de voos
         System.out.println("Voo adicionado com sucesso.");
     }
-
 
     /// Remove um voo do sistema. Solicita ao usuário o número do voo e, se encontrado,
     /// o voo é removido da lista de voos do aeroporto de origem correspondente.
@@ -120,13 +129,13 @@ public class FlightOrganizer {
             // Percorre a lista de voos até encontrar o voo a ser removido
             while (current != null) {
                 if (current.getElemento().getFlightNumber() == flightNumber) {  // Se o voo foi encontrado
-                    if (prev == null) {
-                        flights.removeFirst();  // Remove o primeiro voo da lista
-                    } else {
-                        prev.setProximo(current.getProximo());  // Remove o voo intermediário
-                        flights.tamanho--;
-                    }
+
+                    if (prev == null) flights.removeFirst();  // Remove o primeiro voo da lista
+                    else prev.setProximo(current.getProximo());  // Remove o voo intermediário
+
+                    flights.tamanho--;  // Ajusta corretamente o tamanho da lista
                     System.out.println("Voo removido com sucesso.");
+
                     found = true;  // Indica que o voo foi encontrado e removido
                     break;
                 }
@@ -137,7 +146,7 @@ public class FlightOrganizer {
             airportNode = airportNode.getProximo();  // Passa para o próximo aeroporto
         }
         if (!found) {
-            System.out.println("Voo não encontrado.");  // Exibe erro se o voo não foi encontrado
+            System.err.println("Voo não encontrado.");  // Exibe erro se o voo não foi encontrado
         }
     }
 
@@ -157,6 +166,7 @@ public class FlightOrganizer {
         // Exibe os voos partindo do aeroporto encontrado
         System.out.println("Voos a partir de " + airport.getName() + ":");
         LinkedListDisordered<Flight>.Node flightNode = airport.getFlights().getPrimeiro();
+
         while (flightNode != null) {  // Percorre a lista de voos do aeroporto
             Flight flight = flightNode.getElemento();  // Obtém os detalhes do voo
             String destCode = flight.getDestinationCode();  // Obtém o código do destino
@@ -197,7 +207,7 @@ public class FlightOrganizer {
         LinkedListDisordered<Airport>.Node current = airports.getPrimeiro();
 
         if (current == null) {
-            System.out.println("Nenhum aeroporto cadastrado.");
+            System.err.println("Nenhum aeroporto cadastrado.");
             return;
         }
 
@@ -212,48 +222,228 @@ public class FlightOrganizer {
     /// A função segue a técnica de busca em profundidade (DFS) para explorar todas as rotas.
     ///
     /// @param currentCode Código do aeroporto atual no caminho.
-    /// @param destCode Código do aeroporto de destino.
-    /// @param path Caminho atual sendo percorrido.
-    /// @param visited Lista de aeroportos já visitados para evitar ciclos.
+    /// @param destCode    Código do aeroporto de destino.
+    /// @param path        Caminho atual sendo percorrido.
+    /// @param visited     Lista de aeroportos já visitados para evitar ciclos.
     private void findPaths(
             String currentCode,
             String destCode,
             LinkedListDisordered<String> path,
             LinkedListDisordered<String> visited
     ) {
-        path.addLast(currentCode);  // Adiciona o aeroporto atual ao caminho
-        visited.addLast(currentCode);  // Marca o aeroporto como visitado
+        path.addLast(currentCode);
+        visited.addLast(currentCode);
+
+        // Mensagem de depuração
+        System.out.println("Visitando: " + currentCode);
 
         if (currentCode.equalsIgnoreCase(destCode)) {
-            printPath(path);  // Se o destino foi alcançado, imprime o caminho
+            System.out.println("Destino alcançado!");
+            printPath(path);
         } else {
-            // Procura o aeroporto atual na lista de aeroportos
             Airport currentAirport = findAirportByCode(currentCode);
             if (currentAirport != null) {
-                // Percorre todos os voos partindo do aeroporto atual
                 LinkedListDisordered<Flight>.Node flightNode = currentAirport.getFlights().getPrimeiro();
+
+                if (flightNode == null) System.out.println("Nenhum voo encontrado a partir de: " + currentCode);
+
                 while (flightNode != null) {
                     String nextCode = flightNode.getElemento().getDestinationCode();
 
-                    // Se o próximo aeroporto ainda não foi visitado, segue o caminho
-                    if (!visited.contains(nextCode)) {
-                        findPaths(nextCode, destCode, path, visited);  // Chamada recursiva para o próximo aeroporto
-                    }
-                    flightNode = flightNode.getProximo();  // Move para o próximo voo
+                    // Mensagem de depuração para cada voo encontrado
+                    System.out.println("Voo encontrado: " + currentCode + " -> " + nextCode);
+
+                    if (!visited.contains(nextCode)) findPaths(nextCode, destCode, path, visited);
+
+                    flightNode = flightNode.getProximo();
                 }
+            } else {
+                System.err.println("Aeroporto não encontrado: " + currentCode);
             }
         }
 
-        // Remove o aeroporto atual do caminho e da lista de visitados para permitir outras rotas
         path.removeLast();
         visited.removeLast();
     }
 
-    /// Imprime o caminho encontrado entre dois aeroportos. O caminho é impresso no formato
-    /// de lista encadeada representando os aeroportos percorridos.
+    /// Função para listar todas as combinações possíveis de trajetos entre dois aeroportos distintos.
+    /// Esta função ignora a existência de voos e lista todas as sequências possíveis de aeroportos
+    /// do aeroporto de origem ao aeroporto de destino.
     ///
-    /// @param path O caminho percorrido entre dois aeroportos.
+    /// @param sourceCode Código do aeroporto de origem.
+    /// @param destCode   Código do aeroporto de destino.
+    public void listAllPossiblePaths(String sourceCode, String destCode) {
+        // Validação inicial: verifica se os códigos dos aeroportos de origem e destino são diferentes.
+        // Caso sejam iguais, não há sentido em listar trajetos, então a função exibe um erro e retorna.
+        if (sourceCode.equalsIgnoreCase(destCode)) {
+            System.err.println("Os códigos dos aeroportos de origem e destino devem ser distintos.");
+            return;
+        }
+
+        // Busca o aeroporto de origem e o aeroporto de destino pelos códigos fornecidos.
+        // Se algum dos aeroportos não for encontrado, a função exibe uma mensagem de erro e retorna.
+        Airport sourceAirport = findAirportByCode(sourceCode);
+        Airport destAirport = findAirportByCode(destCode);
+
+        if (sourceAirport == null || destAirport == null) {
+            System.err.println("Aeroporto de origem ou destino não encontrado.");
+            return;
+        }
+
+        // Coleta todos os aeroportos intermediários (excluindo o de origem e o de destino)
+        // para poderem ser combinados nos trajetos. Usa uma lista 'intermediateCodes' para armazenar os códigos.
+        List<String> intermediateCodes = new ArrayList<>();
+        LinkedListDisordered<Airport>.Node current = airports.getPrimeiro();
+
+        // Percorre todos os aeroportos registrados, exceto o de origem e o de destino,
+        // e adiciona os códigos dos intermediários na lista 'intermediateCodes'.
+        while (current != null) {
+            String code = current.getElemento().getCode();
+            if (!code.equalsIgnoreCase(sourceCode) && !code.equalsIgnoreCase(destCode))
+                intermediateCodes.add(code.toUpperCase()); // Adiciona o código em maiúsculas para padronizar
+            current = current.getProximo(); // Move para o próximo aeroporto na lista
+        }
+
+        // Lista para armazenar todas as combinações de aeroportos intermediários.
+        List<List<String>> allCombinations = new ArrayList<>();
+
+        // `n` é o número total de aeroportos intermediários.
+        int n = intermediateCodes.size();
+
+        // Gera todas as combinações possíveis de aeroportos intermediários de tamanho 'k', onde 'k' varia de 0 a 'n'.
+        // 'combine' é uma função auxiliar que gera as combinações recursivamente.
+        for (int k = 0; k <= n; k++)  // 'k' é o tamanho da combinação (número de aeroportos intermediários)
+            combine(intermediateCodes, 0, k, new ArrayList<>(), allCombinations);
+
+        // Exibe uma mensagem inicial informando os trajetos possíveis de origem a destino.
+        System.out.println("Listando todas as combinações possíveis de trajetos de "
+                           + sourceAirport.getName() + " (" + sourceCode.toUpperCase() + ") para "
+                           + destAirport.getName() + " (" + destCode.toUpperCase() + "):\n");
+
+        // 'trajetoNumero' é um contador para numerar os trajetos listados.
+        int trajetoNumero = 1;
+
+        // Para cada combinação de aeroportos intermediários, geramos todas as permutações possíveis.
+        // Isso porque, para cada combinação, a ordem dos aeroportos pode ser rearranjada.
+        for (List<String> combination : allCombinations) {
+
+            List<List<String>> permutations = permute(combination); // 'permute' gera todas as permutações da combinação.
+
+            for (List<String> permuted : permutations) {
+                // Constrói o trajeto completo, começando pelo aeroporto de origem, passando pelos intermediários permutados, e terminando no aeroporto de destino.
+                StringBuilder trajeto = new StringBuilder();
+                trajeto.append(sourceCode.toUpperCase()); // Adiciona o aeroporto de origem
+
+                for (String code : permuted)
+                    trajeto.append(" -> ").append(code); // Adiciona cada aeroporto intermediário
+                trajeto.append(" -> ").append(destCode.toUpperCase()); // Adiciona o aeroporto de destino
+
+                // Exibe o trajeto formatado.
+                System.out.println("Trajeto " + trajetoNumero + ": " + trajeto);
+                trajetoNumero++;
+            }
+        }
+
+        // Exibe o número total de trajetos possíveis encontrados.
+        System.out.println("\nTotal de trajetos possíveis: " + (trajetoNumero - 1));
+    }
+
+
+    /// Função auxiliar para gerar combinações de aeroportos.
+    /// Esta função gera todas as combinações possíveis de aeroportos a partir da lista de códigos fornecida.
+    /// A combinação é controlada pelo valor de 'k', que indica o número de elementos a serem escolhidos.
+    ///
+    /// @param codes     Lista de códigos de aeroportos.
+    /// @param start     Índice inicial para a combinação atual.
+    /// @param k         Tamanho da combinação desejada (quantidade de elementos).
+    /// @param current   Combinação atual sendo construída (parcialmente completa).
+    /// @param allCombos Lista de todas as combinações geradas.
+    private void combine(
+            List<String> codes,
+            int start,
+            int k,
+            List<String> current,
+            List<List<String>> allCombos
+    ) {
+        // Caso base: quando 'k' chega a zero, significa que a combinação atual tem o tamanho desejado.
+        // A combinação é adicionada à lista 'allCombos', criando uma nova instância para não alterar a original.
+        if (k == 0) {
+            allCombos.add(new ArrayList<>(current));  // Armazena a combinação atual
+            return;
+        }
+
+        // Loop para percorrer os códigos de aeroportos a partir do índice 'start'.
+        // `i <= codes.size() - k` garante que ainda haja aeroportos suficientes para completar a combinação.
+        for (int i = start; i <= codes.size() - k; i++) {
+            current.add(codes.get(i)); // Adiciona o código atual à combinação em construção.
+            combine(codes, i + 1, k - 1, current, allCombos); // Chama recursivamente 'combine' para continuar construindo a combinação com o próximo elemento.
+            current.removeLast(); // Remove o último elemento adicionado (backtracking) para tentar a próxima combinação possível.
+        }
+    }
+
+    /// Função auxiliar para gerar todas as permutações de uma combinação de aeroportos.
+    /// Permutações são rearranjos das combinações onde a ordem dos aeroportos é importante.
+    ///
+    /// @param combination Combinação de códigos de aeroportos a ser permutada.
+    /// @return Lista de todas as permutações possíveis da combinação.
+    private List<List<String>> permute(List<String> combination) {
+        List<List<String>> results = new ArrayList<>();
+
+        // Caso base: se a combinação estiver vazia, retorna uma permutação vazia.
+        if (combination.isEmpty()) {
+            results.add(new ArrayList<>());  // Permutação de uma lista vazia
+            return results;
+        }
+
+        // Loop para cada elemento da combinação. O elemento 'current' será fixado,
+        // enquanto o restante será permutado recursivamente.
+        for (int i = 0; i < combination.size(); i++) {
+            // Armazena o elemento atual da combinação como 'current'.
+            String current = combination.get(i);
+
+            // Cria uma nova lista 'remaining', removendo o elemento atual para permutar os restantes.
+            List<String> remaining = new ArrayList<>(combination);
+            remaining.remove(i);
+
+            // Chama recursivamente 'permute' para permutar o restante dos elementos.
+            List<List<String>> remainingPermuted = permute(remaining);
+
+            // Para cada permutação do restante, adiciona o elemento 'current' no início da permutação,
+            // gerando uma nova permutação completa que inclui 'current'
+            for (List<String> permuted : remainingPermuted) {
+                List<String> newPermuted = new ArrayList<>();
+                newPermuted.add(current);  // Adiciona o elemento fixado no início
+                newPermuted.addAll(permuted);  // Adiciona o restante permutado
+
+                results.add(newPermuted); // Adiciona a nova permutação à lista de resultados.
+            }
+        }
+
+        // Retorna todas as permutações possíveis da combinação original.
+        return results;
+    }
+
+    /// Função para imprimir um caminho representado por uma lista encadeada de aeroportos.
+    /// Formata e exibe o caminho, ligando os aeroportos com " -> " para indicar a sequência.
+    ///
+    /// @param path Lista encadeada contendo o caminho dos aeroportos.
     private void printPath(LinkedListDisordered<String> path) {
-        System.out.println(path);
+        StringBuilder sb = new StringBuilder();
+
+        // Percorre a lista encadeada de aeroportos, começando pelo primeiro.
+        LinkedListDisordered<String>.Node current = path.getPrimeiro();
+
+        // Concatena o código de cada aeroporto, adicionando " -> " entre eles para indicar o trajeto.
+        while (current != null) {
+            sb.append(current.getElemento());  // Adiciona o código do aeroporto atual
+
+            // Adiciona a seta (" → ") se ainda houver um próximo aeroporto no trajeto.
+            if (current.getProximo() != null) sb.append(" -> ");
+
+            current = current.getProximo();  // Avança para o próximo aeroporto
+        }
+
+        // Exibe o caminho formatado.
+        System.out.println(sb);
     }
 }
