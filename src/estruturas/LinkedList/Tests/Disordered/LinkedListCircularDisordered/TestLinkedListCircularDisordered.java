@@ -5,7 +5,7 @@ import estruturas.LinkedList.Disordered.LinkedListCircularDisordered;
 
 public class TestLinkedListCircularDisordered {
 
-    // Método para verificar se a lista é circular
+    // metodo para verificar se a lista é circular
     public static <X> boolean verificaCircular(LinkedListCircularDisordered<X> lista) {
         // Se a lista estiver vazia, ela não é circular
         if (lista.primeiro == null) return false;
@@ -26,7 +26,7 @@ public class TestLinkedListCircularDisordered {
         return false;
     }
 
-    // Método para verificar se a lista circular está ordenada
+    // metodo para verificar se a lista circular está ordenada
     public static <X> boolean verificaSimplesmenteEncadeada(LinkedListCircularDisordered<X> lista) {
         // Se a lista estiver vazia ou contiver apenas um nó, ela é simplesmente encadeada
         if (lista.primeiro == null || lista.primeiro.proximo == null) return true;

@@ -12,7 +12,7 @@ import static util.Input.getNonEmptyString;
 public class Main {
 
     /// Scanner para capturar a entrada do usuário. A constante 'scanner' é utilizada
-    /// em todos os métodos que requerem interações com o usuário.
+    /// em todos os metodos que requerem interações com o usuário.
     private static final Scanner scanner = new Scanner(in);
 
     /// Instância da classe 'FlightOrganizer', que gerencia as operações de voo e aeroportos.

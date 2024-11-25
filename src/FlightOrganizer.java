@@ -6,24 +6,83 @@ import java.util.List;
 import static util.Input.getInt;
 import static util.Input.getNonEmptyString;
 
-/// A classe 'FlightOrganizer' é responsável por organizar aeroportos e voos, permitindo
+/// # FlightOrganizer
+///
+/// A classe `FlightOrganizer` é responsável por organizar aeroportos e voos, permitindo
 /// o cadastro de novos aeroportos e voos, bem como a listagem de voos e trajetos possíveis
-/// entre aeroportos. Utiliza uma estrutura de dados encadeada desordenada para armazenar
-/// os aeroportos e seus respectivos voos.
+/// entre aeroportos. Utiliza uma estrutura de dados encadeada desordenada (`LinkedListDisordered`)
+/// para armazenar os aeroportos e seus respectivos voos.
+///
+/// ## Funcionalidades
+/// - **Cadastro de Aeroportos (`addAirport`):** Permite adicionar novos aeroportos ao sistema, garantindo que os códigos sejam únicos.
+/// - **Cadastro de Voos (`addFlight`):** Permite adicionar novos voos entre aeroportos existentes, garantindo que os números de voo sejam únicos.
+/// - **Remoção de Voos (`removeFlight`):** Permite remover voos existentes do sistema com base no número do voo.
+/// - **Listagem de Voos (`listFlightsFromAirport`):** Exibe todos os voos partindo de um aeroporto específico.
+/// - **Listagem de Trajetos (`listPathsBetweenAirports`, `listAllPossiblePaths`):** Exibe todos os trajetos possíveis entre dois aeroportos, incluindo trajetos diretos e indiretos.
+/// - **Listagem de Aeroportos (`listAirports`):** Exibe todos os aeroportos cadastrados no sistema.
+///
+/// ## Estrutura Interna
+/// - **airports:** Lista encadeada desordenada que armazena os aeroportos do sistema.
+///
+/// ## Uso
+/// Crie uma instância de `FlightOrganizer` e utilize os metodos disponíveis para gerenciar aeroportos e voos.
+///
+/// ### Exemplo
+/// ```java
+/// FlightOrganizer organizer = new FlightOrganizer();
+/// organizer.addAirport();
+/// organizer.addFlight();
+/// organizer.listFlightsFromAirport();
+/// organizer.listPathsBetweenAirports();
+/// organizer.listAirports();
+///```
 public class FlightOrganizer {
 
-    /// Lista encadeada desordenada que armazena os aeroportos do sistema.
-    private LinkedListDisordered<Airport> airports;
+    /// ### Campos
+    ///
+    /// - **`airports`:** Lista encadeada desordenada que armazena os aeroportos do sistema.
+    private final LinkedListDisordered<Airport> airports;
 
+    /// ## FlightOrganizer
+    ///
     /// Construtor da classe `FlightOrganizer`. Inicializa a lista de aeroportos e
     /// adiciona alguns aeroportos predefinidos no sistema.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Inicializa `airports` como uma nova instância de `LinkedListDisordered`.
+    /// 2. Chama o metodo `initializeAirports` para adicionar aeroportos predefinidos.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste construtor.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// FlightOrganizer organizer = new FlightOrganizer();
+    ///```
+    ///
+    /// @see #initializeAirports()
     public FlightOrganizer() {
         airports = new LinkedListDisordered<>();
         initializeAirports();
     }
 
+    /// ## initializeAirports
+    ///
     /// Inicializa a lista de aeroportos com valores predefinidos, adicionando cinco
     /// aeroportos: Belo Horizonte, Brasília, Rio de Janeiro, Salvador e São Paulo.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Adiciona cinco instâncias de `Airport` com nomes e códigos específicos à lista `airports`.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// initializeAirports();
+    ///```
+    ///
+    /// @see #FlightOrganizer()
     private void initializeAirports() {
         airports.addLast(new Airport("Belo Horizonte", "CNF"));
         airports.addLast(new Airport("Brasília", "BSB"));
@@ -32,8 +91,32 @@ public class FlightOrganizer {
         airports.addLast(new Airport("São Paulo", "GRU"));
     }
 
+    /// ## findAirportByCode
+    ///
     /// Procura um aeroporto pelo seu código. Percorre a lista encadeada de aeroportos
     /// e retorna o aeroporto correspondente ao código fornecido.
+    ///
+    /// ### Parâmetros
+    /// - **`code`:** O código do aeroporto a ser encontrado.
+    ///
+    /// ### Retorno
+    /// - **`Airport`:** O aeroporto correspondente ao código fornecido ou `null` se não for encontrado.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Inicia a busca pelo primeiro nó da lista `airports`.
+    /// 2. Itera através da lista até encontrar o aeroporto com o código correspondente.
+    /// 3. Retorna o aeroporto encontrado ou `null` se não existir.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// Airport airport = findAirportByCode("GRU");
+    /// if (airport != null){
+    ///     System.out.println("Aeroporto encontrado: " + airport.getName());
+    ///}
+    ///```
     ///
     /// @param code O código do aeroporto a ser encontrado.
     /// @return O aeroporto correspondente ao código fornecido ou `null` se não for encontrado.
@@ -48,8 +131,28 @@ public class FlightOrganizer {
         return null;  // Retorna null se o aeroporto não for encontrado
     }
 
+    /// ## addAirport
+    ///
     /// Adiciona um novo aeroporto ao sistema. Solicita ao usuário o nome e o código
     /// do aeroporto e o adiciona à lista encadeada, desde que o código não exista previamente.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Solicita ao usuário o nome do aeroporto.
+    /// 2. Solicita ao usuário o código do aeroporto.
+    /// 3. Verifica se já existe um aeroporto com o mesmo código usando `findAirportByCode`.
+    /// 4. Se o código for único, cria uma nova instância de `Airport` e a adiciona à lista `airports`.
+    /// 5. Informa ao usuário que o aeroporto foi adicionado com sucesso ou exibe uma mensagem de erro se o código já existir.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// FlightOrganizer organizer = new FlightOrganizer();
+    /// organizer.addAirport();
+    ///```
+    ///
+    /// @see #findAirportByCode(String)
     public void addAirport() {
         String name = getNonEmptyString("Digite o nome do aeroporto: ");
         String code = getNonEmptyString("Digite o código do aeroporto: ");
@@ -65,9 +168,31 @@ public class FlightOrganizer {
         System.out.println("Aeroporto adicionado com sucesso.");
     }
 
+    /// ## addFlight
+    ///
     /// Adiciona um voo entre dois aeroportos. Solicita ao usuário o código do aeroporto
     /// de origem, o código do aeroporto de destino e o número do voo. Se os aeroportos forem
     /// válidos e o número do voo não estiver duplicado, o voo é cadastrado.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Solicita ao usuário o código do aeroporto de origem.
+    /// 2. Solicita ao usuário o código do aeroporto de destino.
+    /// 3. Solicita ao usuário o número do voo.
+    /// 4. Verifica se os aeroportos de origem e destino existem usando `findAirportByCode`.
+    /// 5. Verifica se o número do voo já existe em qualquer aeroporto.
+    /// 6. Se todas as verificações passarem, cria uma nova instância de `Flight` e a adiciona ao aeroporto de origem.
+    /// 7. Informa ao usuário que o voo foi adicionado com sucesso ou exibe uma mensagem de erro se houver duplicações.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// FlightOrganizer organizer = new FlightOrganizer();
+    /// organizer.addFlight();
+    ///```
+    ///
+    /// @see #findAirportByCode(String)
     public void addFlight() {
         String sourceCode = getNonEmptyString("Digite o código do aeroporto de origem: ");
         String destCode = getNonEmptyString("Digite o código do aeroporto de destino: ");
@@ -114,8 +239,27 @@ public class FlightOrganizer {
         System.out.println("Voo adicionado com sucesso.");
     }
 
+    /// ## removeFlight
+    ///
     /// Remove um voo do sistema. Solicita ao usuário o número do voo e, se encontrado,
     /// o voo é removido da lista de voos do aeroporto de origem correspondente.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Solicita ao usuário o número do voo a ser removido.
+    /// 2. Itera através da lista de aeroportos e de seus voos para encontrar o voo correspondente.
+    /// 3. Se o voo for encontrado, remove-o da lista de voos do aeroporto de origem.
+    /// 4. Informa ao usuário que o voo foi removido com sucesso ou exibe uma mensagem de erro se o voo não for encontrado.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// FlightOrganizer organizer = new FlightOrganizer();
+    /// organizer.removeFlight();
+    ///```
+    ///
+    /// @see #findAirportByCode(String)
     public void removeFlight() {
         int flightNumber = getInt("Digite o número do voo a ser removido: ");  // Solicita o número do voo
 
@@ -150,8 +294,27 @@ public class FlightOrganizer {
         }
     }
 
+    /// ## listFlightsFromAirport
+    ///
     /// Lista todos os voos partindo de um aeroporto específico. Solicita o código do
     /// aeroporto e exibe os voos cadastrados para aquele aeroporto.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Solicita ao usuário o código do aeroporto.
+    /// 2. Busca o aeroporto correspondente usando `findAirportByCode`.
+    /// 3. Se o aeroporto for encontrado, itera sobre sua lista de voos e exibe detalhes de cada voo.
+    /// 4. Exibe mensagens de erro se o aeroporto não for encontrado ou se não houver voos cadastrados.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// FlightOrganizer organizer = new FlightOrganizer();
+    /// organizer.listFlightsFromAirport();
+    ///```
+    ///
+    /// @see #findAirportByCode(String)
     public void listFlightsFromAirport() {
         String code = getNonEmptyString("Digite o código do aeroporto: ");  // Solicita o código do aeroporto
 
@@ -177,9 +340,29 @@ public class FlightOrganizer {
         }
     }
 
+    /// ## listPathsBetweenAirports
+    ///
     /// Lista todos os possíveis trajetos entre dois aeroportos. Solicita os códigos de origem
     /// e destino e exibe todos os caminhos possíveis entre os aeroportos, permitindo trajetos
     /// diretos e indiretos.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Solicita ao usuário o código do aeroporto de origem.
+    /// 2. Solicita ao usuário o código do aeroporto de destino.
+    /// 3. Busca os aeroportos de origem e destino usando `findAirportByCode`.
+    /// 4. Se ambos os aeroportos forem encontrados, inicia a busca por trajetos utilizando `findPaths`.
+    /// 5. Exibe mensagens de erro se os aeroportos não forem encontrados.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// FlightOrganizer organizer = new FlightOrganizer();
+    /// organizer.listPathsBetweenAirports();
+    ///```
+    ///
+    /// @see #findAirportByCode(String)
     public void listPathsBetweenAirports() {
         String sourceCode = getNonEmptyString("Digite o código do aeroporto de origem: ");  // Solicita o código do aeroporto de origem
         String destCode = getNonEmptyString("Digite o código do aeroporto de destino: ");  // Solicita o código do aeroporto de destino
@@ -196,12 +379,30 @@ public class FlightOrganizer {
         System.out.println("Possíveis trajetos de " + sourceAirport.getName() + " para " + destAirport.getName() + ":");
 
         LinkedListDisordered<String> path = new LinkedListDisordered<>();  // Lista para armazenar o trajeto atual
-        LinkedListDisordered<String> visited = new LinkedListDisordered<>();  // Lista para armazenar os aeroportos visitados
+        LinkedListDisordered<String> visited = new LinkedListDisordered<>();  // Lista para armazenar os aeroportos já visitados
         findPaths(sourceCode, destCode, path, visited);  // Inicia a busca pelos trajetos
     }
 
+    /// ## listAirports
+    ///
     /// Lista todos os aeroportos cadastrados no sistema. Percorre a lista encadeada de aeroportos
     /// e exibe o nome e o código de cada um.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Inicia a iteração pelo primeiro nó da lista `airports`.
+    /// 2. Itera através da lista, exibindo o nome e o código de cada aeroporto.
+    /// 3. Exibe mensagens de erro se não houver aeroportos cadastrados.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// FlightOrganizer organizer = new FlightOrganizer();
+    /// organizer.listAirports();
+    ///```
+    ///
+    /// @see #findAirportByCode(String)
     public void listAirports() {
         System.out.println("Aeroportos cadastrados no sistema:");
         LinkedListDisordered<Airport>.Node current = airports.getPrimeiro();
@@ -218,8 +419,31 @@ public class FlightOrganizer {
         }
     }
 
+    /// ## findPaths
+    ///
     /// Função recursiva que encontra todos os caminhos possíveis entre dois aeroportos.
     /// A função segue a técnica de busca em profundidade (DFS) para explorar todas as rotas.
+    ///
+    /// ### Parâmetros
+    /// - **`currentCode`:** Código do aeroporto atual no caminho.
+    /// - **`destCode`:** Código do aeroporto de destino.
+    /// - **`path`:** Caminho atual sendo percorrido.
+    /// - **`visited`:** Lista de aeroportos já visitados para evitar ciclos.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Adiciona o aeroporto atual ao `path` e marca-o como visitado.
+    /// 2. Se o aeroporto atual for o destino, imprime o trajeto.
+    /// 3. Caso contrário, itera sobre todos os voos do aeroporto atual:
+    ///    - Para cada voo, se o destino não tiver sido visitado, chama recursivamente `findPaths`.
+    /// 4. Remove o aeroporto atual do `path` e da lista de `visited` (backtracking).
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// findPaths("GRU", "GIG", new LinkedListDisordered<>(), new LinkedListDisordered<>());
+    ///```
     ///
     /// @param currentCode Código do aeroporto atual no caminho.
     /// @param destCode    Código do aeroporto de destino.
@@ -266,9 +490,33 @@ public class FlightOrganizer {
         visited.removeLast();
     }
 
+    /// ## listAllPossiblePaths
+    ///
     /// Função para listar todas as combinações possíveis de trajetos entre dois aeroportos distintos.
     /// Esta função ignora a existência de voos e lista todas as sequências possíveis de aeroportos
     /// do aeroporto de origem ao aeroporto de destino.
+    ///
+    /// ### Parâmetros
+    /// - **`sourceCode`:** Código do aeroporto de origem.
+    /// - **`destCode`:** Código do aeroporto de destino.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Valida se os códigos dos aeroportos de origem e destino são distintos.
+    /// 2. Busca os aeroportos de origem e destino usando `findAirportByCode`.
+    /// 3. Coleta todos os aeroportos intermediários (excluindo os de origem e destino).
+    /// 4. Gera todas as combinações possíveis de aeroportos intermediários.
+    /// 5. Para cada combinação, gera todas as permutações possíveis.
+    /// 6. Constrói e exibe cada trajeto completo a partir das permutações.
+    /// 7. Informa o número total de trajetos possíveis encontrados.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// FlightOrganizer organizer = new FlightOrganizer();
+    /// organizer.listAllPossiblePaths("GRU", "GIG");
+    ///```
     ///
     /// @param sourceCode Código do aeroporto de origem.
     /// @param destCode   Código do aeroporto de destino.
@@ -305,7 +553,7 @@ public class FlightOrganizer {
         }
 
         // Lista para armazenar todas as combinações de aeroportos intermediários.
-        List<List<String>> allCombinations = new ArrayList<>();
+        List<List<String>> allCombos = new ArrayList<>();
 
         // `n` é o número total de aeroportos intermediários.
         int n = intermediateCodes.size();
@@ -313,7 +561,7 @@ public class FlightOrganizer {
         // Gera todas as combinações possíveis de aeroportos intermediários de tamanho 'k', onde 'k' varia de 0 a 'n'.
         // 'combine' é uma função auxiliar que gera as combinações recursivamente.
         for (int k = 0; k <= n; k++)  // 'k' é o tamanho da combinação (número de aeroportos intermediários)
-            combine(intermediateCodes, 0, k, new ArrayList<>(), allCombinations);
+            combine(intermediateCodes, 0, k, new ArrayList<>(), allCombos);
 
         // Exibe uma mensagem inicial informando os trajetos possíveis de origem a destino.
         System.out.println("Listando todas as combinações possíveis de trajetos de "
@@ -325,7 +573,7 @@ public class FlightOrganizer {
 
         // Para cada combinação de aeroportos intermediários, geramos todas as permutações possíveis.
         // Isso porque, para cada combinação, a ordem dos aeroportos pode ser rearranjada.
-        for (List<String> combination : allCombinations) {
+        for (List<String> combination : allCombos) {
 
             List<List<String>> permutations = permute(combination); // 'permute' gera todas as permutações da combinação.
 
@@ -348,10 +596,33 @@ public class FlightOrganizer {
         System.out.println("\nTotal de trajetos possíveis: " + (trajetoNumero - 1));
     }
 
-
+    /// ## combine
+    ///
     /// Função auxiliar para gerar combinações de aeroportos.
     /// Esta função gera todas as combinações possíveis de aeroportos a partir da lista de códigos fornecida.
-    /// A combinação é controlada pelo valor de 'k', que indica o número de elementos a serem escolhidos.
+    /// A combinação é controlada pelo valor de `k`, que indica o número de elementos a serem escolhidos.
+    ///
+    /// ### Parâmetros
+    /// - **`codes`:** Lista de códigos de aeroportos.
+    /// - **`start`:** Índice inicial para a combinação atual.
+    /// - **`k`:** Tamanho da combinação desejada (quantidade de elementos).
+    /// - **`current`:** Combinação atual sendo construída (parcialmente completa).
+    /// - **`allCombos`:** Lista de todas as combinações geradas.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Se `k` for zero, adiciona a combinação atual à lista `allCombos` e retorna.
+    /// 2. Itera sobre os códigos a partir do índice `start`.
+    /// 3. Adiciona o código atual à combinação e chama recursivamente `combine` com `k-1`.
+    /// 4. Remove o último elemento adicionado (backtracking) para tentar a próxima combinação possível.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// List<List<String>> allCombos = new ArrayList<>();
+    /// combine(intermediateCodes, 0, 2, new ArrayList<>(), allCombos);
+    ///```
     ///
     /// @param codes     Lista de códigos de aeroportos.
     /// @param start     Índice inicial para a combinação atual.
@@ -381,8 +652,32 @@ public class FlightOrganizer {
         }
     }
 
+    /// ## permute
+    ///
     /// Função auxiliar para gerar todas as permutações de uma combinação de aeroportos.
     /// Permutações são rearranjos das combinações onde a ordem dos aeroportos é importante.
+    ///
+    /// ### Parâmetros
+    /// - **`combination`:** Combinação de códigos de aeroportos a ser permutada.
+    ///
+    /// ### Retorno
+    /// - **`List<List<String>>`:** Lista de todas as permutações possíveis da combinação.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Se a combinação estiver vazia, adiciona uma lista vazia à lista de resultados e retorna.
+    /// 2. Itera sobre cada elemento da combinação, fixando-o como o primeiro elemento.
+    /// 3. Gera permutações recursivamente para o restante dos elementos.
+    /// 4. Adiciona cada permutação resultante à lista de resultados.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// List<String> combination = Arrays.asList("SSA", "BSB");
+    /// List<List<String>> permutations = permute(combination);
+    /// // permutations = [["SSA", "BSB"],["BSB", "SSA"]]
+    ///```
     ///
     /// @param combination Combinação de códigos de aeroportos a ser permutada.
     /// @return Lista de todas as permutações possíveis da combinação.
@@ -423,8 +718,30 @@ public class FlightOrganizer {
         return results;
     }
 
+    /// ## printPath
+    ///
     /// Função para imprimir um caminho representado por uma lista encadeada de aeroportos.
     /// Formata e exibe o caminho, ligando os aeroportos com " -> " para indicar a sequência.
+    ///
+    /// ### Parâmetros
+    /// - **`path`:** Lista encadeada contendo o caminho dos aeroportos.
+    ///
+    /// ### Fluxo de Operações
+    /// 1. Inicializa um `StringBuilder`.
+    /// 2. Itera sobre cada código de aeroporto na lista `path`, concatenando-os com " -> ".
+    /// 3. Exibe o caminho formatado no console.
+    ///
+    /// ### Exceções
+    /// Nenhuma exceção lançada diretamente neste metodo.
+    ///
+    /// ### Exemplo
+    /// ```java
+    /// LinkedListDisordered<String> path = new LinkedListDisordered<>();
+    /// path.addLast("GRU");
+    /// path.addLast("GIG");
+    /// printPath(path);
+    /// // Saída: GRU -> GIG
+    ///```
     ///
     /// @param path Lista encadeada contendo o caminho dos aeroportos.
     private void printPath(LinkedListDisordered<String> path) {
@@ -437,7 +754,7 @@ public class FlightOrganizer {
         while (current != null) {
             sb.append(current.getElemento());  // Adiciona o código do aeroporto atual
 
-            // Adiciona a seta (" → ") se ainda houver um próximo aeroporto no trajeto.
+            // Adiciona a seta (" -> ") se ainda houver um próximo aeroporto no trajeto.
             if (current.getProximo() != null) sb.append(" -> ");
 
             current = current.getProximo();  // Avança para o próximo aeroporto

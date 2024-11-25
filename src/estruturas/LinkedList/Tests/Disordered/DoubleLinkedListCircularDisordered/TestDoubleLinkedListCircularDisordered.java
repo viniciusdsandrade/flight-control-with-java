@@ -26,7 +26,7 @@ public class TestDoubleLinkedListCircularDisordered {
         return lista.getPrimeiro().anterior == lista.getUltimo();
     }
 
-    // Método para verificar se a lista é circular
+    // metodo para verificar se a lista é circular
     public static <X> boolean verificaCircularidade(DoubleLinkedListCircularDisordered<X> lista) {
         // Se a lista estiver vazia, ela não é circular
         if (lista.getPrimeiro() == null || lista.getUltimo() == null) return false;

@@ -28,7 +28,7 @@ public class TestLinkedListDisordered {
         return true;
     }
 
-    // Método auxiliar para contar as referências para o próximo nó de um determinado nó
+    // metodo auxiliar para contar as referências para o próximo nó de um determinado nó
     private static <X> int countReferencesToNext(LinkedListDisordered<X>.Node node) {
         int count = 0;
         LinkedListDisordered<X>.Node current = node;
@@ -234,7 +234,7 @@ public class TestLinkedListDisordered {
         name.addLast("Santos");
         System.out.println(name);
 
-        //quero testar o método reverse
+        //quero testar o metodo reverse
         name.reverse();
         System.out.println(name);
         name.reverse();
